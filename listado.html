@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profesionales - El Bolsón</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body class="bg-gray-100">
+    <nav class="bg-green-600 p-4 text-white shadow-lg flex items-center">
+        <a href="index.html" class="mr-4"><i class="fas fa-arrow-left"></i></a>
+        <h1 id="titulo-rubro" class="text-xl font-bold uppercase">Cargando...</h1>
+    </nav>
+
+    <main class="p-4" id="lista-profesionales">
+        </main>
+
+    <script>
+        // Simulamos la base de datos de El Bolsón
+        const trabajadores = [
+            { nombre: "Juan Pérez", rubro: "Electricista", tel: "2944123456", zona: "Barrio Obrero" },
+            { nombre: "Pedro Gómez", rubro: "Electricista", tel: "2944987654", zona: "Villa Turismo" },
+            { nombre: "Luis Rodríguez", rubro: "Plomero", tel: "2944112233", zona: "Centro" }
+        ];
+
+        // Leemos qué rubro eligió el usuario
+        const urlParams = new URLSearchParams(window.location.search);
+        const rubroSeleccionado = urlParams.get('rubro');
+        document.getElementById('titulo-rubro').innerText = rubroSeleccionado;
+
+        // Filtramos y mostramos
+        const filtrados = trabajadores.filter(t => t.rubro === rubroSeleccionado);
+        const contenedor = document.getElementById('lista-profesionales');
+
+        if (filtrados.length > 0) {
+            contenedor.innerHTML = filtrados.map(t => `
+                <div class="bg-white p-4 rounded-lg shadow mb-4 border-l-4 border-green-500">
+                    <h2 class="text-lg font-bold">${t.nombre}</h2>
+                    <p class="text-gray-600"><i class="fas fa-map-marker-alt mr-2"></i>${t.zona}</p>
+                    <a href="https://wa.me/${t.tel}" class="mt-2 inline-block bg-green-500 text-white px-4 py-2 rounded-full text-sm">
+                        <i class="fab fa-whatsapp mr-1"></i> Contactar
+                    </a>
+                </div>
+            `).join('');
+        } else {
+            contenedor.innerHTML = `<p class="text-center text-gray-500 mt-10">Próximamente más profesionales en este rubro.</p>`;
+        }
+    </script>
+</body>
+</html>

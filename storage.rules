@@ -1,0 +1,37 @@
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+
+    // ── Avatars: usuarios leen/escriben los suyos ─────────
+    match /avatars/{userId} {
+      allow read: if request.auth != null;
+      allow write: if request.auth != null && request.auth.uid == userId
+        && request.resource.size < 5 * 1024 * 1024  // max 5MB
+        && request.resource.contentType.matches('image/.*');
+    }
+
+    // ── Fotos de proyectos / galerías ─────────────────────
+    match /proyectos-fotos/{allPaths=**} {
+      allow read: if request.auth != null;
+      allow write: if request.auth != null
+        && request.resource.size < 10 * 1024 * 1024  // max 10MB
+        && request.resource.contentType.matches('image/.*');
+    }
+
+    // ── Fotos de comercios ────────────────────────────────
+    match /comercios-fotos/{allPaths=**} {
+      allow read: if request.auth != null;
+      allow write: if request.auth != null
+        && request.resource.size < 10 * 1024 * 1024
+        && request.resource.contentType.matches('image/.*');
+    }
+
+    // ── Historias (24hs) ──────────────────────────────────
+    match /historias/{allPaths=**} {
+      allow read: if request.auth != null;
+      allow write: if request.auth != null
+        && request.resource.size < 10 * 1024 * 1024
+        && request.resource.contentType.matches('image/.*');
+    }
+  }
+}
